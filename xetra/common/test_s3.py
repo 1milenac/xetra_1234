@@ -5,7 +5,7 @@ import os
 import unittest
 import boto3
 from moto import mock_s3
-
+import pandas as pd
 from xetra.common.s3 import S3BucketConnector
 
 
@@ -127,6 +127,25 @@ class TestS3BucketConnectorMethods(unittest.TestCase):
                 ]
             }
         )
+
+    def test_write_df_to_s3_empty(self):
+        """
+        Tests the write_df_to_s3 method with an empty df as an inpit
+        """
+        # Expected results
+        return_exp = None
+        log_exp = 'The dataframe is empty! No file will be writem'
+        # test init
+        df_empty = pd.DataFrame()
+        key = 'key.csv'
+        file_format = 'csv'
+        # Method execution
+        with self.assertLogs() as logm:
+            result = self.s3_bucket_conn.write_df_to_s3(df_empty, key, file_format)
+            # log test after method exec
+            self.assertIn(log_exp, logm.output[0])
+        # test after method exec
+        self.assertEqual(return_exp, result)
 
 
 if __name__ == '__main__':
