@@ -10,7 +10,7 @@ class S3FileTypes(Enum):
     CSV= 'csv'
     PARQUET = 'parquet'
 
-class MetaPRocessFormat(Enum):
+class MetaProcessFormat(Enum):
     """
     formation for MetaProcess class
     """
