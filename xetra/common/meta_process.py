@@ -3,15 +3,17 @@ Methods for processing the meta file
 """
 import collections
 from datetime import datetime, timedelta
+import pandas as pd
 from xetra.common.s3 import S3BucketConnector
 from xetra.common.constants import MetaProcessFormat
 from xetra.common.custom_exceptions import WrongMetaFileException
-import pandas as pd
+
 
 class MetaProcess:
     """
     class for working with the meta file
     """
+
     @staticmethod
     def update_meta_file(extract_date_list: list, meta_key: str, s3_bucket_meta: S3BucketConnector):
         """
@@ -29,7 +31,7 @@ class MetaProcess:
         df_new[MetaProcessFormat.META_SOURCE_DATE_COL.value] = extract_date_list
         # filling the processed column
         df_new[MetaProcessFormat.META_PROCESS_COL.value] = \
-        datetime.today().strftime(MetaProcessFormat.META_PROCESS_DATE_FORMAT.value)
+            datetime.today().strftime(MetaProcessFormat.META_PROCESS_DATE_FORMAT.value)
         try:
             # if meta file exists
             df_old = s3_bucket_meta.read_csv_to_df(meta_key)
@@ -43,7 +45,8 @@ class MetaProcess:
         return True
 
     @staticmethod
-    def return_date_list(first_date: str, meta_key : str, s3_bucket_meta: S3BucketConnector):
+    def return_date_list(first_date: str, meta_key: str, s3_bucket_meta: S3BucketConnector):
+
         """
         Creating a list of dates based on the input first_date and already processed dates in the meta file
         :param first_date: the earliest date that shouldbe processed
@@ -53,8 +56,7 @@ class MetaProcess:
         min_date: first date that should be processed
         return_date_list: list of dates from min_date till today
         """
-        start = datetime.strftime(first_date,
-                                  MetaProcessFormat.META_DATE_FORMAT.value).date() - timedelta(days=1)
+        start = datetime.strftime(first_date, MetaProcessFormat.META_DATE_FORMAT.value).date() - timedelta(days=1)
         today = datetime.today().date()
         try:
             # if meta file exists, create return_date_list using the content of meta file
@@ -67,7 +69,8 @@ class MetaProcess:
             if dates_missing:
                 # Determining the earliest date that should be processed
                 min_date = min(set(dates[1:]) - src_dates) - timedelta(days=1)
-                return_dates = [date.strftime(MetaProcessFormat.META_DATE_FORMAT.value) for date in dates if date >= min_date]
+                return_dates = [date.strftime(MetaProcessFormat.META_DATE_FORMAT.value) for date in dates if
+                                date >= min_date]
                 return_min_date = (min_date + timedelta(days=1)).strftime(MetaProcessFormat.META_DATE_FORMAT.value)
             else:
                 # setting values for the earliestt date and list of dates
@@ -76,7 +79,7 @@ class MetaProcess:
 
         except s3_bucket_meta.session.client('s3').exceptions.NoSuchKey:
             # no meta file found -> creating a date list from first_day -1 until today
-            return_dates = [(start + timedelta(days=x)).strftime(MetaProcessFormat.META_DATE_FORMAT.value) for x in range(0, (today - start).days + 1)]
+            return_dates = [(start + timedelta(days=x)).strftime(MetaProcessFormat.META_DATE_FORMAT.value) for x in
+                            range(0, (today - start).days + 1)]
             return_min_date = first_date
-
         return return_min_date, return_dates
