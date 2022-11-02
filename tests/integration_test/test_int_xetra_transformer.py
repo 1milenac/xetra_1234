@@ -11,6 +11,7 @@ from xetra.common.s3 import S3BucketConnector
 from xetra.common.constants import MetaProcessFormat
 from xetra.transformers.xetra_transformer import XetraETL, XetraSourceConfig, XetraTargetConfig
 
+
 class IntTestXetraETLMethods(unittest.TestCase):
     """
     Integration testing the XetraETL class.
@@ -33,21 +34,21 @@ class IntTestXetraETLMethods(unittest.TestCase):
         self.trg_bucket = self.s3.Bucket(self.s3_bucket_name_trg)
         # Creating S3BucketConnector testing instances
         self.s3_bucket_src = S3BucketConnector(self.s3_access_key,
-                                                self.s3_secret_key,
-                                                self.s3_endpoint_url,
-                                                self.s3_bucket_name_src)
+                                               self.s3_secret_key,
+                                               self.s3_endpoint_url,
+                                               self.s3_bucket_name_src)
         self.s3_bucket_trg = S3BucketConnector(self.s3_access_key,
-                                                self.s3_secret_key,
-                                                self.s3_endpoint_url,
-                                                self.s3_bucket_name_trg)
+                                               self.s3_secret_key,
+                                               self.s3_endpoint_url,
+                                               self.s3_bucket_name_trg)
         # Creating a list of dates
-        self.dates = [(datetime.today().date() - timedelta(days=day))\
-            .strftime(MetaProcessFormat.META_DATE_FORMAT.value) for day in range(8)]
+        self.dates = [(datetime.today().date() - timedelta(days=day)) \
+                          .strftime(MetaProcessFormat.META_DATE_FORMAT.value) for day in range(8)]
         # Creating source and target configuration
         conf_dict_src = {
             'src_first_extract_date': self.dates[3],
             'src_columns': ['ISIN', 'Mnemonic', 'Date', 'Time',
-            'StartPrice', 'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume'],
+                            'StartPrice', 'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume'],
             'src_col_date': 'Date',
             'src_col_isin': 'ISIN',
             'src_col_time': 'Time',
@@ -73,7 +74,7 @@ class IntTestXetraETLMethods(unittest.TestCase):
         self.target_config = XetraTargetConfig(**conf_dict_trg)
         # Creating source files on mocked s3
         columns_src = ['ISIN', 'Mnemonic', 'Date', 'Time', 'StartPrice',
-        'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume']
+                       'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume']
         data = [['AT0000A0E9W5', 'SANT', self.dates[5], '12:00', 20.19, 18.45, 18.20, 20.33, 877],
                 ['AT0000A0E9W5', 'SANT', self.dates[4], '15:00', 18.27, 21.19, 18.27, 21.34, 987],
                 ['AT0000A0E9W5', 'SANT', self.dates[3], '13:00', 20.21, 18.27, 18.21, 20.42, 633],
@@ -85,25 +86,25 @@ class IntTestXetraETLMethods(unittest.TestCase):
                 ['AT0000A0E9W5', 'SANT', self.dates[1], '09:00', 24.22, 22.21, 22.21, 25.01, 1523]]
         self.df_src = pd.DataFrame(data, columns=columns_src)
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[0:0],
-        f'{self.dates[5]}/{self.dates[5]}_BINS_XETR12.csv','csv')
+                                          f'{self.dates[5]}/{self.dates[5]}_BINS_XETR12.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[1:1],
-        f'{self.dates[4]}/{self.dates[4]}_BINS_XETR15.csv','csv')
+                                          f'{self.dates[4]}/{self.dates[4]}_BINS_XETR15.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[2:2],
-        f'{self.dates[3]}/{self.dates[3]}_BINS_XETR13.csv','csv')
+                                          f'{self.dates[3]}/{self.dates[3]}_BINS_XETR13.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[3:3],
-        f'{self.dates[3]}/{self.dates[3]}_BINS_XETR14.csv','csv')
+                                          f'{self.dates[3]}/{self.dates[3]}_BINS_XETR14.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[4:4],
-        f'{self.dates[2]}/{self.dates[2]}_BINS_XETR07.csv','csv')
+                                          f'{self.dates[2]}/{self.dates[2]}_BINS_XETR07.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[5:5],
-        f'{self.dates[2]}/{self.dates[2]}_BINS_XETR08.csv','csv')
+                                          f'{self.dates[2]}/{self.dates[2]}_BINS_XETR08.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[6:6],
-        f'{self.dates[1]}/{self.dates[1]}_BINS_XETR07.csv','csv')
+                                          f'{self.dates[1]}/{self.dates[1]}_BINS_XETR07.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[7:7],
-        f'{self.dates[1]}/{self.dates[1]}_BINS_XETR08.csv','csv')
+                                          f'{self.dates[1]}/{self.dates[1]}_BINS_XETR08.csv', 'csv')
         self.s3_bucket_src.write_df_to_s3(self.df_src.loc[8:8],
-        f'{self.dates[1]}/{self.dates[1]}_BINS_XETR09.csv','csv')
+                                          f'{self.dates[1]}/{self.dates[1]}_BINS_XETR09.csv', 'csv')
         columns_report = ['ISIN', 'Date', 'opening_price_eur', 'closing_price_eur',
-        'minimum_price_eur', 'maximum_price_eur', 'daily_traded_volume', 'change_prev_closing_%']
+                          'minimum_price_eur', 'maximum_price_eur', 'daily_traded_volume', 'change_prev_closing_%']
         data_report = [['AT0000A0E9W5', self.dates[3], 20.21, 18.27, 18.21, 21.34, 1088, 10.62],
                        ['AT0000A0E9W5', self.dates[2], 20.58, 19.27, 18.89, 21.14, 10286, 1.83],
                        ['AT0000A0E9W5', self.dates[1], 23.58, 24.22, 22.21, 25.01, 3586, 14.58]]
@@ -135,6 +136,7 @@ class IntTestXetraETLMethods(unittest.TestCase):
         meta_file = self.s3_bucket_trg.list_files_in_prefix(self.meta_key)[0]
         df_meta_result = self.s3_bucket_trg.read_csv_to_df(meta_file)
         self.assertEqual(list(df_meta_result['source_date']), meta_exp)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -63,11 +63,11 @@ class S3BucketConnector():
         if data_frame.empty:
             self._logger.info('The dataframe is empty! No file will be writem')
             return None
-        if file_format == S3FileTypes.CSV.values:
+        if file_format == S3FileTypes.CSV.name:
             out_buffer = StringIO()
             data_frame.to_csv(out_buffer, key)
             return self.__put_object(out_buffer, key)
-        if file_format == S3FileTypes.PARQUET.values:
+        if file_format == S3FileTypes.PARQUET:
             out_buffer = BytesIO()
             data_frame.to_parquet(out_buffer, key)
             return self.__put_object(out_buffer, key)
