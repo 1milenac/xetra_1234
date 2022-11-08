@@ -11,7 +11,7 @@ from xetra.transformers.xetra_transformer import XetraETL, XetraSourceConfig, Xe
 
 def main():
     """
-    entry point to run the extra ETL job
+    entry point to run the extract ETL job
     """
     # Parsing YAMl file
     parser = argparse.ArgumentParser(description='Run the Xetra ETL job')

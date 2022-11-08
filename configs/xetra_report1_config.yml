@@ -5,7 +5,7 @@ s3:
   src_endpoint_url: 'https://s3.amazonaws.com'
   src_bucket: 'xetra-1234'
   trg_endpoint_url: 'https://s3.amazonaws.com'
-  trg_bucket: 'xetra-xetra-1234'
+  trg_bucket: 'test-xetra'
 
 # configuration specific to the source
 source:
@@ -21,9 +21,9 @@ source:
 
 # configuration specific to the source
 target:
-  trg_key: 'report1/xetra_daily_report1_'
+  trg_key: 'xetra_daily_report1'
   trg_key_date_format: '%Y%m%d_%H%M%S'
-  trg_format: 'parquet'
+  trg_format: 'csv'
   trg_col_isin: 'isin'
   trg_col_date: 'date'
   trg_col_op_price: 'opening_price_eur'
@@ -35,7 +35,7 @@ target:
 
 # configuration specific to the meta file
 meta:
-  meta_key: 'meta/report1/xetra_report1_meta_file.csv'
+  meta_key: 'meta_file.csv'
 
 # Logging configuration
 logging:

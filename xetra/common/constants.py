@@ -17,7 +17,7 @@ class MetaProcessFormat(Enum):
     """
     formation for MetaProcess class
     """
-    META_DATE_FORMAT = '%Y-%M-%D'
+    META_DATE_FORMAT = '%Y-%m-%d'
     META_PROCESS_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
     META_SOURCE_DATE_COL = 'source_date'
     META_PROCESS_COL = 'datetime_of_processing'

@@ -56,7 +56,8 @@ class MetaProcess:
         min_date: first date that should be processed
         return_date_list: list of dates from min_date till today
         """
-        start = datetime.strftime(first_date, MetaProcessFormat.META_DATE_FORMAT.value).date() - timedelta(days=1)
+        #dt_obj = datetime.strptime(first_date, '%Y-%m-%d')
+        start = datetime.strptime(first_date, MetaProcessFormat.META_DATE_FORMAT.value).date() - timedelta(days=1)
         today = datetime.today().date()
         try:
             # if meta file exists, create return_date_list using the content of meta file

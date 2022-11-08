@@ -23,10 +23,12 @@ class S3BucketConnector():
         """
         self._logger = logging.getLogger(__name__)
         self.endpoint_url = endpoint_url
-        self.session = boto3.Session(aws_access_key_id=os.environ[access_key],
-                                     aws_secret_access_key=os.environ[secret_key])
-        self._s3 = self.session.resource(service_name='s3', endpoint_url=endpoint_url)
-        self._bucket = self._s3.Bucket(bucket)
+        #self.session = boto3.Session(aws_access_key_id=os.environ[access_key],
+        #                             aws_secret_access_key=os.environ[secret_key])
+        #self._s3 = self.session.resource(service_name='s3', endpoint_url=endpoint_url)
+
+        self.s3 = boto3.resource('s3')
+        self._bucket = self.s3.Bucket(bucket)
 
     def list_files_in_prefix(self, prefix: str):
         """
@@ -34,6 +36,7 @@ class S3BucketConnector():
         :param prefix: prefix on the S3 bucket that should be filtered with
         :return: files: list of all files containing the prefix
         """
+        
         files = [obj.key for obj in self._bucket.objects.filter(Prefix=prefix)]
         return files
 
@@ -51,7 +54,7 @@ class S3BucketConnector():
         data_frame = pd.read_csv(data, sep=sep)
         return data_frame
 
-    def write_df_to_s3(self, data_frame: pd.DataFrame, key: str, file_format: str):
+    def write_df_to_s3(self, data_frame: pd.DataFrame, key: str, file_format: str, sep: str = ','):
         """
         writing a pandas df to S3
         supported formats: .csv, .parquet
@@ -61,17 +64,18 @@ class S3BucketConnector():
         :param file_format: file format
         """
         if data_frame.empty:
-            self._logger.info('The dataframe is empty! No file will be writem')
+            self._logger.info('The dataframe is empty! No file will be written!')
             return None
-        if file_format == S3FileTypes.CSV.name:
+        if file_format == S3FileTypes.CSV.value:
             out_buffer = StringIO()
-            data_frame.to_csv(out_buffer, key)
+            data_frame.to_csv(out_buffer, index=False)
             return self.__put_object(out_buffer, key)
-        if file_format == S3FileTypes.PARQUET:
+        if file_format == S3FileTypes.PARQUET.value:
             out_buffer = BytesIO()
-            data_frame.to_parquet(out_buffer, key)
+            data_frame.to_parquet(out_buffer, index=False)
             return self.__put_object(out_buffer, key)
-        self._logger.info('The file format %s is not supported to be written', file_format)
+        self._logger.info('The file format %s is not '
+        'supported to be written to s3!', file_format)
         raise WrongFormatException
 
     def __put_object(self, out_buffer: StringIO or BytesIO, key: str):
@@ -80,6 +84,6 @@ class S3BucketConnector():
         :param out_buffer: StringIO | BytesIO
         :param key: target key
         """
-        self._logger.info('Writing file to %s/%s/%s', self._endpoint_url, self._bucket.name, key)
-        self._bucket.put_objects(Body=out_buffer.getvalue(), Key=key)
+        self._logger.info('Writing file to %s/%s/%s', self.endpoint_url, self._bucket.name, key)
+        self._bucket.put_object(Body=out_buffer.getvalue(), Key=key)
         return True

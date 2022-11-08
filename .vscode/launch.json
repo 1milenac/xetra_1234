@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
     
         {
             "name": "Python: bieżący plik",
@@ -17,7 +18,7 @@
         {
             "name": "xetra_etl_run",
             "type": "python",
-            "python.pythonPath": "C:/Users/geoinf1/.virtualenvs/xetra_project--BFdGeF5/Scripts/python.exe",
+            "python.pythonPath": "C:/Users/geoinf1/.virtualenvs/xetra_1234-w_2pi4Ol/Scripts/python.exe",
             "request": "launch",
             "program": "C:/xetra_project/xetra_1234/run.py",
             "console": "integratedTerminal",
