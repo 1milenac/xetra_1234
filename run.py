@@ -24,14 +24,12 @@ def main():
     # reading s3 configuration
     s3_config = config['s3']
     # creating the S3BucketConnector classes for source and target
-    s3_bucket_src = S3BucketConnector(access_key=s3_config['access_key'],
-                                      secret_key=s3_config['secret_key'],
-                                      endpoint_url=s3_config['src_endpoint_url'],
-                                      bucket=s3_config['src_bucket'])
-    s3_bucket_trg = S3BucketConnector(access_key=s3_config['access_key'],
-                                      secret_key=s3_config['secret_key'],
-                                      endpoint_url=s3_config['trg_endpoint_url'],
-                                      bucket=s3_config['trg_bucket'])
+    s3_bucket_src = S3BucketConnector(
+        endpoint_url=s3_config['src_endpoint_url'],
+        bucket=s3_config['src_bucket'])
+    s3_bucket_trg = S3BucketConnector(
+        endpoint_url=s3_config['trg_endpoint_url'],
+        bucket=s3_config['trg_bucket'])
     # reading source configuration
     source_config = XetraSourceConfig(**config['source'])
     # reading target configuration

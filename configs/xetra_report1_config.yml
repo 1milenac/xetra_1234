@@ -9,7 +9,7 @@ s3:
 
 # configuration specific to the source
 source:
-  src_first_extract_date: '2022-11-04'
+  src_first_extract_date: '2022-11-08'
   src_columns: ['ISIN', 'Mnemonic', 'Date', 'Time', 'StartPrice', 'EndPrice', 'MinPrice', 'MaxPrice', 'TradedVolume']
   src_col_date: 'Date'
   src_col_isin: 'ISIN'
