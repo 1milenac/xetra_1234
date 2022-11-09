@@ -99,6 +99,7 @@ class XetraETL():
         self._logger.info('Extracting Xetra source files started...')
         files = [key for date in self.extract_date_list\
                      for key in self.s3_bucket_src.list_files_in_prefix(date)]
+                     
         if not files:
             data_frame = pd.DataFrame()
         else:
